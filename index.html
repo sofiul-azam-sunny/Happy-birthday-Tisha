@@ -447,7 +447,7 @@
         .money-shower {
             position: absolute;
             font-size: 2rem;
-            z-index: 20;
+            z-index: 500;
             pointer-events: none;
             animation: scatter 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
@@ -502,7 +502,7 @@
 
     <!-- Gift Modal -->
     <div id="giftModal">
-        <h2>এই যে তোর গিফট🙂‍↕️</h2>
+        <h2>এই যে তোর গিফট🙂‍↕️ <br><span style="font-size: 1rem; color: #aaa; font-weight: normal;">(বক্সে ক্লিক কর!)</span></h2>
         <div class="the-box-container" id="theBox">
             <div class="box-lid"></div>
             <div class="box-back"></div>
@@ -610,7 +610,8 @@
             }, 600);
         }
 
-         const giftBtn = document.getElementById('giftBtn');
+        // Gift Box Logic
+        const giftBtn = document.getElementById('giftBtn');
         const giftModal = document.getElementById('giftModal');
         const theBox = document.getElementById('theBox');
         const joker = document.getElementById('joker');
@@ -621,45 +622,46 @@
         });
 
         theBox.addEventListener('click', () => {
-            if(isBoxOpen) return;
+            if (isBoxOpen) return;
             isBoxOpen = true;
             
             theBox.classList.add('open');
-            
-            setInterval(() => {
-                joker.classList.add('pop');
-                
-                setTimeout(throwMoney, 300);
+            joker.classList.add('pop');
+            throwMoney();
+        });
 
-                setTimeout(() => {
-                    joker.classList.remove('pop');
-                }, 1500);
-                
-            }, 3000);
+        // Close modal when clicking outside the box
+        giftModal.addEventListener('click', (e) => {
+            if (e.target === giftModal) {
+                giftModal.style.display = 'none';
+                theBox.classList.remove('open');
+                joker.classList.remove('pop');
+                isBoxOpen = false;
+            }
         });
 
         function throwMoney() {
-            for(let i=0; i<60; i++) {
+            for(let i=0; i<40; i++) {
                 setTimeout(() => {
                     const money = document.createElement('div');
                     money.classList.add('money-shower');
                     money.innerText = Math.random() > 0.5 ? '💵' : '💸';
                     
-                    const tx = (Math.random() - 0.5) * 700 + 'px'; 
-                    const ty = (Math.random() * -500 - 100) + 'px'; 
-                    const rot = (Math.random() * 720) + 'deg';
+                    const tx = (Math.random() - 0.5) * 500 + 'px'; 
+                    const ty = (Math.random() * -400 - 50) + 'px'; 
+                    const rot = (Math.random() * 360) + 'deg';
                     
                     money.style.setProperty('--tx', tx);
                     money.style.setProperty('--ty', ty);
                     money.style.setProperty('--rot', rot);
                     
                     money.style.left = '50%';
-                    money.style.top = '10%';
+                    money.style.top = '60%';
 
-                    theBox.appendChild(money);
+                    giftModal.appendChild(money);
                     
                     setTimeout(() => money.remove(), 1500);
-                }, Math.random() * 400);
+                }, i * 30);
             }
         }
     </script>
